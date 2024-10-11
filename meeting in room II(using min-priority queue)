@@ -1,0 +1,28 @@
+int Solution::solve(vector<vector<int> > &A) {
+    // Edge case: If there are no meetings, no room is needed
+    if (A.empty()) return 0;
+
+    // Sort the meetings by their start times
+    sort(A.begin(), A.end(), [](vector<int> &a, vector<int> &b) {
+        return a[0] < b[0];
+    });
+
+    // Min-heap to track the end times of meetings
+    priority_queue<int, vector<int>, greater<int>> endTimeHeap;
+
+    // Add the end time of the first meeting to the heap
+    endTimeHeap.push(A[0][1]);
+
+    // Iterate through the rest of the meetings
+    for (int i = 1; i < A.size(); i++) {
+        // If the current meeting starts after or when the earliest meeting ends, reuse the room
+        if (A[i][0] >= endTimeHeap.top()) {
+            endTimeHeap.pop();
+        }
+        // Push the current meeting's end time to the heap
+        endTimeHeap.push(A[i][1]);
+    }
+
+    // The size of the heap represents the number of meeting rooms required
+    return endTimeHeap.size();
+}
