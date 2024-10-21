@@ -1,27 +1,24 @@
-#include <bits/stdc++.h>
-int minRooms(vector<vector<int>> intervals) {
- int i=0,j=0;
- int len=intervals.size();
- if (len == 0) return 0;
- vector<int>arrival(len);
- vector<int>departure(len);
- for (int i = 0; i < len; i++) {
-        arrival[i] = intervals[i][0];
-        departure[i] = intervals[i][1];
+class Solution {
+  public:
+    int minMeetingRooms(vector<int> &start, vector<int> &end) {
+        // code here
+        sort(start.begin(), start.end());
+        sort(end.begin(), end.end());
+
+        int n = start.size();
+        int rooms = 0;
+        int end_ptr = 0;
+
+        // Traverse the start array to check when we need a new room
+        for (int i = 0; i < n; i++) {
+            // If the meeting starts after or when the earliest room frees up, reuse the room
+            if (start[i] >= end[end_ptr]) {
+                end_ptr++;  // Move to the next room that becomes free
+            } else {
+                rooms++;  // A new room is needed
+            }
+        }
+
+        return rooms;
     }
-sort(arrival.begin(),arrival.end());
-sort(departure.begin(),departure.end());
-int cnt=0;
-int maxi=INT_MIN;
-while(i<len){
-    if(arrival[i]<departure[j]){
-        cnt++;
-        i++;
-    } else {
-        cnt--;
-        j++;
-    }
-    maxi = max(maxi, cnt);
-}
-return maxi;
-}
+};
